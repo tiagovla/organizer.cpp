@@ -1,10 +1,12 @@
 #include "inotify-cxx.h"
+#include <algorithm>
 #include <cstdlib>
 #include <exception>
 #include <filesystem>
 #include <iostream>
 #include <stdio.h>
 #include <string>
+#include <toml++/toml.h>
 #include <unordered_map>
 #include <vector>
 
@@ -82,14 +84,50 @@ void run_watcher(fs::path &path, std::unordered_map<std::string, std::string> &m
     }
 }
 
+std::unordered_map<std::string, std::vector<std::string>> config_map(std::string config_path) {
+    toml::table tbl;
+    try {
+        tbl = toml::parse_file(config_path);
+    } catch (const toml::parse_error &e) {
+        std::cerr << "Error parsing config file " << config_path << ": " << e.what() << std::endl;
+        exit(1);
+    }
+    auto folders = tbl["folders"];
+    if (!folders.is_table()) {
+        std::cerr << "Error parsing config file " << config_path << ": no [folders] section" << std::endl;
+        return {};
+    }
+    std::unordered_map<std::string, std::vector<std::string>> map;
+    for (const auto &folder : *folders.as_table()) {
+        auto foldername = std::string(folder.first.str());
+        auto extensions = folder.second.as_array();
+        map[foldername].reserve(extensions->size());
+        std::transform(extensions->begin(), extensions->end(), std::back_inserter(map[foldername]),
+                       [](toml::node &e) { return e.as_string()->get(); });
+    }
+    return map;
+}
+
+std::string get_config_path() {
+    std::string config_path = std::getenv("XDG_CONFIG_HOME");
+    if (config_path.empty())
+        config_path = std::string(std::getenv("HOME")) + "/.config";
+    return config_path + "/organizer.toml";
+}
+
+void print_filetypes(std::unordered_map<std::string, std::vector<std::string>> &file_types) {
+    std::cout << "File types:" << std::endl;
+    for (const auto &[k, v] : file_types) {
+        std::cout << k << ": ";
+        for (const auto &ext : v)
+            std::cout << ext << " ";
+        std::cout << std::endl;
+    }
+}
+
 int main(int argc, char **argv) {
-    std::unordered_map<std::string, std::vector<std::string>> file_types{
-        {"documents", {".pdf", ".mobi", ".epub"}},
-        {"music", {".mp3"}},
-        {"videos", {".mp4"}},
-        {"images", {".jpg", ".jpeg"}},
-        {"compressed", {".zip", ".rar", ".gz", ".bz2", ".7z"}},
-    };
+    auto config_path = get_config_path();
+    auto file_types = config_map(config_path);
     auto map = invert_map(file_types);
 
     fs::path path;

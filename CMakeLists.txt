@@ -16,4 +16,13 @@ message(STATUS ${CMAKE_INSTALL_PREFIX})
 add_executable(organizer src/main.cpp src/inotify-cxx.cpp)
 target_include_directories(organizer PRIVATE "include")
 
+include(FetchContent)
+FetchContent_Declare(
+  tomlplusplus
+  GIT_REPOSITORY https://github.com/marzer/tomlplusplus.git
+  GIT_TAG v3.4.0)
+FetchContent_MakeAvailable(tomlplusplus)
+
+target_link_libraries(organizer PRIVATE tomlplusplus::tomlplusplus)
+
 install(TARGETS organizer DESTINATION bin)
