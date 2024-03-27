@@ -1,5 +1,6 @@
 #include "inotify-cxx.h"
 #include <algorithm>
+#include <argparse/argparse.hpp>
 #include <cstdlib>
 #include <exception>
 #include <filesystem>
@@ -84,7 +85,7 @@ void run_watcher(fs::path &path, std::unordered_map<std::string, std::string> &m
     }
 }
 
-std::unordered_map<std::string, std::vector<std::string>> config_map(std::string config_path) {
+std::unordered_map<std::string, std::string> config_map(std::string config_path) {
     toml::table tbl;
     try {
         tbl = toml::parse_file(config_path);
@@ -105,37 +106,37 @@ std::unordered_map<std::string, std::vector<std::string>> config_map(std::string
         std::transform(extensions->begin(), extensions->end(), std::back_inserter(map[foldername]),
                        [](toml::node &e) { return e.as_string()->get(); });
     }
-    return map;
+    return invert_map(map);
+}
+
+std::string expand_home(const std::string &path) {
+    std::string home = std::getenv("HOME");
+    if (!path.empty() && path[0] == '~' && !home.empty()) {
+        return std::string(home) + path.substr(1);
+    }
+    return path;
 }
 
 std::string get_config_path() {
     std::string config_path = std::getenv("XDG_CONFIG_HOME");
     if (config_path.empty())
-        config_path = std::string(std::getenv("HOME")) + "/.config";
+        config_path = expand_home("~/.config");
     return config_path + "/organizer.toml";
 }
 
-void print_filetypes(std::unordered_map<std::string, std::vector<std::string>> &file_types) {
-    std::cout << "File types:" << std::endl;
-    for (const auto &[k, v] : file_types) {
-        std::cout << k << ": ";
-        for (const auto &ext : v)
-            std::cout << ext << " ";
-        std::cout << std::endl;
-    }
-}
-
 int main(int argc, char **argv) {
-    auto config_path = get_config_path();
-    auto file_types = config_map(config_path);
-    auto map = invert_map(file_types);
-
-    fs::path path;
-    if (argc > 1) {
-        path = fs::path(argv[1]);
-    } else {
-        path = fs::path(std::getenv("HOME")) / "Downloads";
+    argparse::ArgumentParser cli("organizer");
+    cli.add_argument("-p", "--path").default_value(std::string("~/Downloads")).help("path of the folder to be organized").nargs(0);
+    try {
+        cli.parse_args(argc, argv);
+    } catch (const std::exception &err) {
+        std::cerr << err.what() << std::endl;
+        std::exit(1);
     }
+
+    auto config_path = get_config_path();
+    auto map = config_map(config_path);
+    fs::path path(expand_home(cli.get<std::string>("--path")));
 
     if (fs::is_directory(path)) {
         std::cout << "Organizing folder " << path << std::endl;
