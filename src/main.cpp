@@ -5,6 +5,7 @@
 #include <exception>
 #include <filesystem>
 #include <iostream>
+#include <loguru.hpp>
 #include <stdio.h>
 #include <string>
 #include <toml++/toml.h>
@@ -60,7 +61,7 @@ void run_watcher(fs::path &path, std::unordered_map<std::string, std::string> &m
         Inotify notify;
         InotifyWatch watch(path, IN_MOVED_TO | IN_CLOSE_WRITE);
         notify.add(watch);
-        std::cout << "Watching directory " << path << std::endl;
+        LOG_F(INFO, "Watching directory %s", path.c_str());
         for (;;) {
             notify.wait_for_events();
             size_t count = notify.get_event_count();
@@ -127,6 +128,7 @@ std::string get_config_path() {
 int main(int argc, char **argv) {
     argparse::ArgumentParser cli("organizer");
     cli.add_argument("-p", "--path").default_value(std::string("~/Downloads")).help("path of the folder to be organized").nargs(0);
+    cli.add_argument("-d", "--debug").default_value(false).implicit_value(true).help("enable debug");
     try {
         cli.parse_args(argc, argv);
     } catch (const std::exception &err) {
@@ -134,12 +136,16 @@ int main(int argc, char **argv) {
         std::exit(1);
     }
 
+    if (cli["--debug"] == false)
+        loguru::g_stderr_verbosity = loguru::Verbosity_OFF;
+    loguru::init(argc, argv);
+
     auto config_path = get_config_path();
     auto map = config_map(config_path);
     fs::path path(expand_home(cli.get<std::string>("--path")));
 
     if (fs::is_directory(path)) {
-        std::cout << "Organizing folder " << path << std::endl;
+        LOG_F(INFO, "Organizing folder %s", path.c_str());
         organize_folder(path, map);
         run_watcher(path, map);
     } else {
