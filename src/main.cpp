@@ -83,6 +83,8 @@ void run_watcher(fs::path &path, std::unordered_map<std::string, std::string> &m
         std::cerr << "Inotify exception occured: " << e.GetMessage() << std::endl;
     } catch (std::exception &e) {
         std::cerr << "STL exception occured: " << e.what() << std::endl;
+    } catch (...) {
+        std::cerr << "unknown exception occured" << std::endl;
     }
 }
 

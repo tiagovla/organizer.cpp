@@ -12,7 +12,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-add_executable(organizer src/main.cpp src/inotify-cxx.cpp)
+add_executable(organizer src/main.cpp)
 target_include_directories(organizer PRIVATE "include")
 
 include(FetchContent)
@@ -34,12 +34,11 @@ FetchContent_Declare(
   GIT_BRANCH master)
 FetchContent_MakeAvailable(loguru)
 
+add_subdirectory(vendor/inotify-cxx)
+
 target_link_libraries(organizer PRIVATE tomlplusplus::tomlplusplus)
 target_link_libraries(organizer PRIVATE argparse::argparse)
 target_link_libraries(organizer PRIVATE loguru::loguru)
-
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    target_compile_definitions(organizer PRIVATE DISABLE_LOGURU)
-endif()
+target_link_libraries(organizer PRIVATE inotify-cxx::inotify-cxx)
 
 install(TARGETS organizer DESTINATION bin)
