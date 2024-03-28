@@ -2,7 +2,6 @@
 
 #include <inotify-cxx.h>
 #include <functional>
-#include <vector>
 
 class Manager {
   public:
