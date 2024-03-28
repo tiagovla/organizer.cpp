@@ -1,5 +1,4 @@
-#include "manager.hpp"
-#include "inotify-cxx.h"
+#include "organizer/manager.hpp"
 #include <iostream>
 #include <string>
 

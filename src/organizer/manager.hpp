@@ -1,6 +1,6 @@
 #pragma once
 
-#include "inotify-cxx.h"
+#include <inotify-cxx.h>
 #include <functional>
 #include <vector>
 

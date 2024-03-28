@@ -16,7 +16,7 @@ add_subdirectory(vendor)
 
 add_executable(organizer src/organizer.cpp src/organizer/manager.cpp
                          src/organizer/config.cpp)
-target_include_directories(organizer PRIVATE "src/organizer")
+target_include_directories(organizer PRIVATE "src")
 target_link_libraries(organizer PRIVATE organizer_deps)
 
 install(TARGETS organizer DESTINATION bin)

@@ -1,4 +1,4 @@
-#include "config.hpp"
+#include "organizer/config.hpp"
 #include <iostream>
 #include <string>
 #include <toml++/toml.h>
