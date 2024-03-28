@@ -1,22 +1,35 @@
 cmake_minimum_required(VERSION 3.22)
 
+
 project(organizer)
 
 set(CMAKE_BUILD_TYPE
     "Release"
     CACHE STRING "Choose build type" FORCE)
 
+set(PROJECT_VERSION_MAJOR 0)
+set(PROJECT_VERSION_MINOR 1)
+set(PROJECT_VERSION_PATCH 0)
+set(PROJECT_VERSION
+    "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}"
+)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+configure_file (
+    "${PROJECT_SOURCE_DIR}/src/organizer/version.hpp.in"
+    "${PROJECT_BINARY_DIR}/src/organizer/version.hpp"
+)
+
 add_subdirectory(vendor)
 
 add_executable(organizer src/organizer.cpp src/organizer/manager.cpp
                          src/organizer/config.cpp)
 target_include_directories(organizer PRIVATE "src")
+target_include_directories(organizer PRIVATE "${PROJECT_BINARY_DIR}/src")
 target_link_libraries(organizer PRIVATE organizer_deps)
 
 install(TARGETS organizer DESTINATION bin)

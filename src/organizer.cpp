@@ -1,4 +1,5 @@
 #include "organizer/config.hpp"
+#include "organizer/version.hpp"
 #include "organizer/manager.hpp"
 #include <argparse/argparse.hpp>
 #include <filesystem>
@@ -9,7 +10,7 @@ namespace fs = std::filesystem;
 
 int main(int argc, char **argv) {
 
-    argparse::ArgumentParser cli("organizer");
+    argparse::ArgumentParser cli("organizer", ORGANIZER_VERSION);
     cli.add_argument("-c", "--config")
         .default_value(std::string("~/.config/organizer.toml"))
         .help("path of the config file")
