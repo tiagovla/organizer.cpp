@@ -32,7 +32,8 @@ Config TOMLConfigParser::parse(std::string path) {
     }
     for (const auto &[watch, folders] : tbl) {
         if (!folders.is_table()) {
-            std::cerr << "Error parsing config file " << path << ": no [folders] section" << std::endl;
+            std::cerr << "Error parsing config file " << path << ": no [folders] section"
+                      << std::endl;
             return {};
         }
         std::unordered_map<std::string, std::string> sub_rules;

@@ -3,7 +3,6 @@
 #include <argparse/argparse.hpp>
 #include <filesystem>
 #include <iostream>
-#include <memory>
 #include <string>
 
 namespace fs = std::filesystem;
@@ -11,9 +10,14 @@ namespace fs = std::filesystem;
 int main(int argc, char **argv) {
 
     argparse::ArgumentParser cli("organizer");
-
-    cli.add_argument("-c", "--config").default_value(std::string("~/.config/organizer.toml")).help("path of the config file").nargs(1);
-    cli.add_argument("-d", "--debug").default_value(false).implicit_value(true).help("enable debugging");
+    cli.add_argument("-c", "--config")
+        .default_value(std::string("~/.config/organizer.toml"))
+        .help("path of the config file")
+        .nargs(1);
+    cli.add_argument("-d", "--debug")
+        .default_value(false)
+        .implicit_value(true)
+        .help("enable debugging");
     try {
         cli.parse_args(argc, argv);
     } catch (const std::exception &err) {

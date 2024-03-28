@@ -1,7 +1,7 @@
 #pragma once
 
-#include <inotify-cxx.h>
 #include <functional>
+#include <inotify-cxx.h>
 
 class Manager {
   public:
