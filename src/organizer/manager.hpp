@@ -1,6 +1,8 @@
+#pragma once
+
 #include "inotify-cxx.h"
-#include <vector>
 #include <functional>
+#include <vector>
 
 class Manager {
   public:
