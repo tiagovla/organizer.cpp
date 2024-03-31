@@ -1,15 +1,15 @@
+// Copyright 2024 <tiagovla>
+
 #include "organizer/config.hpp"
 #include "organizer/manager.hpp"
 #include "organizer/utils.hpp"
 #include "organizer/version.hpp"
 #include <argparse/argparse.hpp>
 #include <filesystem>
-#include <iostream>
 #include <loguru.hpp>
 #include <string>
 
 namespace fs = std::filesystem;
-using namespace organizer;
 
 int main(int argc, char **argv) {
 
@@ -32,12 +32,13 @@ int main(int argc, char **argv) {
         loguru::g_stderr_verbosity = loguru::Verbosity_OFF;
     loguru::init(argc, argv);
 
-    Config config;
-    Manager manager;
+    organizer::Config config;
+    organizer::Manager manager;
 
     {
-        std::unique_ptr<ConfigParser> parser = std::make_unique<TOMLConfigParser>();
-        config = parser->parse(get_config_path());
+        std::unique_ptr<organizer::ConfigParser> parser =
+            std::make_unique<organizer::TOMLConfigParser>();
+        config = parser->parse(organizer::get_config_path());
     }
 
     for (auto &path : config.watch_paths()) {
@@ -46,10 +47,12 @@ int main(int argc, char **argv) {
 
     manager.run([&](auto file_name, auto file_path) {
         auto old_file = std::filesystem::path(file_path) / file_name;
-        auto folder = config.rules_for_watch(std::string(file_path))[old_file.extension()];
+        auto folder = config.rules_for_watch(
+            std::string(file_path))[old_file.extension()];
         if (!folder.empty()) {
-            auto new_file = std::filesystem::path(file_path) / folder / file_name;
-            new_file = new_file_path(new_file);
+            auto new_file =
+                std::filesystem::path(file_path) / folder / file_name;
+            new_file = organizer::new_file_path(new_file);
             try {
                 fs::rename(old_file, new_file);
             } catch (fs::filesystem_error &e) {
@@ -59,4 +62,4 @@ int main(int argc, char **argv) {
             LOG_F(INFO, "Moving %s -> %s", old_file.c_str(), new_file.c_str());
         }
     });
-};
+}

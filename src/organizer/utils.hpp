@@ -1,3 +1,5 @@
+// Copyright 2024 <tiagovla>
+
 #include <filesystem>
 #include <string>
 

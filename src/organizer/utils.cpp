@@ -1,3 +1,5 @@
+// Copyright 2024 <tiagovla>
+
 #include <filesystem>
 #include <string>
 
@@ -22,7 +24,8 @@ std::filesystem::path new_file_path(const std::filesystem::path &old_file) {
     int count = 1;
     while (std::filesystem::exists(new_file)) {
         new_file = old_file;
-        new_file.replace_filename(old_file.stem().string() + "_" + std::to_string(count) +
+        new_file.replace_filename(old_file.stem().string() + "_" +
+                                  std::to_string(count) +
                                   old_file.extension().string());
         count++;
     }

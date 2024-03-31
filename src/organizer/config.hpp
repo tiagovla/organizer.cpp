@@ -1,3 +1,5 @@
+// Copyright 2024 <tiagovla>
+
 #pragma once
 
 #include <ranges>
@@ -14,14 +16,18 @@ namespace organizer {
 class Config {
   public:
     Config();
-    Config(auto rules);
-    Config(auto &rules);
-    std::unordered_map<std::string, std::string> rules_for_watch(std::string watch_path);
+    explicit Config(auto rules);
+    explicit Config(const auto &rules);
+
+    std::unordered_map<std::string, std::string>
+    rules_for_watch(std::string watch_path);
     auto watch_paths() { return std::views::keys(_rules); }
 
   public:
     // {"watch_path": {"extension": "folder_name"}}
-    std::unordered_map<std::string, std::unordered_map<std::string, std::string>> _rules;
+    std::unordered_map<std::string,
+                       std::unordered_map<std::string, std::string>>
+        _rules;
 };
 
 class ConfigParser {

@@ -1,3 +1,5 @@
+// Copyright 2024 <tiagovla>
+
 #include "organizer/manager.hpp"
 #include <iostream>
 #include <loguru.hpp>
@@ -13,7 +15,8 @@ void Manager::watch(std::string path) {
     LOG_F(INFO, "Watching directory %s", path.c_str());
 }
 
-void Manager::run(std::function<void(std::string_view, std::string_view)> handler) {
+void Manager::run(
+    std::function<void(std::string_view, std::string_view)> handler) {
     try {
         for (;;) {
             notify.wait_for_events();
@@ -30,7 +33,8 @@ void Manager::run(std::function<void(std::string_view, std::string_view)> handle
             }
         }
     } catch (InotifyException &e) {
-        std::cerr << "Inotify exception occured: " << e.GetMessage() << std::endl;
+        std::cerr << "Inotify exception occured: " << e.GetMessage()
+                  << std::endl;
     } catch (std::exception &e) {
         std::cerr << "STL exception occured: " << e.what() << std::endl;
     } catch (...) {
