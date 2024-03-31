@@ -1,5 +1,6 @@
 #include "organizer/config.hpp"
 #include "organizer/manager.hpp"
+#include "organizer/utils.hpp"
 #include "organizer/version.hpp"
 #include <argparse/argparse.hpp>
 #include <filesystem>
@@ -32,7 +33,8 @@ int main(int argc, char **argv) {
 
     {
         std::unique_ptr<ConfigParser> parser = std::make_unique<TOMLConfigParser>();
-        config = parser->parse("/home/tiagovla/.config/organizer.toml");
+        std::string config_path = get_config_path();
+        config = parser->parse(config_path);
     }
 
     for (auto &path : config.watch_paths()) {

@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
 
-
 project(organizer)
 
 set(CMAKE_BUILD_TYPE
@@ -19,15 +18,13 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-configure_file (
-    "${PROJECT_SOURCE_DIR}/src/organizer/version.hpp.in"
-    "${PROJECT_BINARY_DIR}/src/organizer/version.hpp"
-)
+configure_file("${PROJECT_SOURCE_DIR}/src/organizer/version.hpp.in"
+               "${PROJECT_BINARY_DIR}/src/organizer/version.hpp")
 
 add_subdirectory(vendor)
 
 add_executable(organizer src/organizer.cpp src/organizer/manager.cpp
-                         src/organizer/config.cpp)
+                         src/organizer/config.cpp src/organizer/utils.cpp)
 target_include_directories(organizer PRIVATE "src")
 target_include_directories(organizer PRIVATE "${PROJECT_BINARY_DIR}/src")
 target_link_libraries(organizer PRIVATE organizer_deps)
