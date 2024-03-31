@@ -33,8 +33,7 @@ int main(int argc, char **argv) {
 
     {
         std::unique_ptr<ConfigParser> parser = std::make_unique<TOMLConfigParser>();
-        std::string config_path = get_config_path();
-        config = parser->parse(config_path);
+        config = parser->parse(get_config_path());
     }
 
     for (auto &path : config.watch_paths()) {
@@ -46,6 +45,7 @@ int main(int argc, char **argv) {
         auto folder = config.rules_for_watch(std::string(file_path))[old_file.extension()];
         if (!folder.empty()) {
             auto new_file = std::filesystem::path(file_path) / folder / file_name;
+            new_file = new_file_path(new_file);
             try {
                 fs::rename(old_file, new_file);
             } catch (fs::filesystem_error &e) {
