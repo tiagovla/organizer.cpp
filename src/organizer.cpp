@@ -5,6 +5,7 @@
 #include <argparse/argparse.hpp>
 #include <filesystem>
 #include <iostream>
+#include <loguru.hpp>
 #include <string>
 
 namespace fs = std::filesystem;
@@ -27,6 +28,9 @@ int main(int argc, char **argv) {
         std::cerr << err.what() << std::endl;
         std::exit(1);
     }
+    if (cli["--debug"] == false)
+        loguru::g_stderr_verbosity = loguru::Verbosity_OFF;
+    loguru::init(argc, argv);
 
     Config config;
     Manager manager;
@@ -52,7 +56,7 @@ int main(int argc, char **argv) {
                 fs::create_directory(new_file.parent_path());
                 fs::rename(old_file, new_file);
             }
-            std::cout << "Moving: " << old_file << " -> " << new_file << std::endl;
+            LOG_F(INFO, "Moving %s -> %s", old_file.c_str(), new_file.c_str());
         }
     });
 };
