@@ -4,6 +4,11 @@
 #include <string>
 #include <unordered_map>
 
+/**
+ * @class Config
+ * @brief Representation of a configuration for the organizer
+ *
+ */
 class Config {
   public:
     Config();

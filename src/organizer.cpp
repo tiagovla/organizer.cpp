@@ -1,6 +1,6 @@
 #include "organizer/config.hpp"
-#include "organizer/version.hpp"
 #include "organizer/manager.hpp"
+#include "organizer/version.hpp"
 #include <argparse/argparse.hpp>
 #include <filesystem>
 #include <iostream>
