@@ -17,7 +17,7 @@ static std::string expand_home(const std::string &path) {
 
 Config::Config() = default;
 Config::Config(auto rules) : _rules(rules) {}
-Config::Config(const auto &rules) : _rules(std::move(rules)) {}
+Config::Config(auto &rules) : _rules(std::move(rules)) {}
 std::unordered_map<std::string, std::string>
 Config::rules_for_watch(std::string watch_path) {
     if (_rules.contains(watch_path)) {

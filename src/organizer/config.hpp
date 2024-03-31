@@ -16,8 +16,8 @@ namespace organizer {
 class Config {
   public:
     Config();
-    explicit Config(auto rules);
-    explicit Config(const auto &rules);
+    Config(auto rules);
+    Config(auto &rules);
 
     std::unordered_map<std::string, std::string>
     rules_for_watch(std::string watch_path);
