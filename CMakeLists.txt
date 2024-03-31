@@ -23,7 +23,7 @@ configure_file("${PROJECT_SOURCE_DIR}/src/organizer/version.hpp.in"
 
 add_subdirectory(vendor)
 
-add_executable(organizer src/organizer.cpp src/organizer/manager.cpp
+add_executable(organizer src/main.cpp src/organizer/manager.cpp
                          src/organizer/config.cpp src/organizer/utils.cpp)
 target_include_directories(organizer PRIVATE "src")
 target_include_directories(organizer PRIVATE "${PROJECT_BINARY_DIR}/src")
