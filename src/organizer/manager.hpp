@@ -3,6 +3,7 @@
 #include <functional>
 #include <inotify-cxx.h>
 
+namespace organizer {
 /**
  * @class Manager
  * @brief Representation of a manager to watch paths for changes
@@ -28,3 +29,4 @@ class Manager {
     Inotify notify;
     std::vector<InotifyWatch> watches;
 };
+} // namespace organizer

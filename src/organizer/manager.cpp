@@ -4,6 +4,8 @@
 
 static constexpr long PERMISSIONS = IN_MOVED_TO | IN_CLOSE_WRITE;
 
+namespace organizer {
+
 void Manager::watch(std::string path) {
     watches.emplace_back(path, PERMISSIONS);
     notify.add(watches.back());
@@ -33,3 +35,4 @@ void Manager::run(std::function<void(std::string_view, std::string_view)> handle
         std::cerr << "unknown exception occured" << std::endl;
     }
 }
+} // namespace organizer

@@ -7,6 +7,7 @@
 #include <string>
 
 namespace fs = std::filesystem;
+using namespace organizer;
 
 int main(int argc, char **argv) {
 

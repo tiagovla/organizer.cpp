@@ -4,6 +4,8 @@
 #include <string>
 #include <unordered_map>
 
+namespace organizer {
+
 /**
  * @class Config
  * @brief Representation of a configuration for the organizer
@@ -31,3 +33,4 @@ class TOMLConfigParser : public ConfigParser {
   public:
     Config parse(std::string path) override;
 };
+} // namespace organizer

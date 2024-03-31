@@ -1,5 +1,6 @@
 #include <string>
 
+namespace organizer {
 std::string expand_home(const std::string &path) {
     std::string home = std::getenv("HOME");
     if (!path.empty() && path[0] == '~' && !home.empty()) {
@@ -14,3 +15,4 @@ std::string get_config_path() {
         config_path = expand_home("~/.config");
     return config_path + "/organizer.toml";
 }
+} // namespace organizer

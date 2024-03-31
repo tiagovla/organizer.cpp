@@ -3,6 +3,8 @@
 #include <string>
 #include <toml++/toml.h>
 
+namespace organizer {
+
 static std::string expand_home(const std::string &path) {
     std::string home = std::getenv("HOME");
     if (!path.empty() && path[0] == '~' && !home.empty()) {
@@ -47,3 +49,4 @@ Config TOMLConfigParser::parse(std::string path) {
     }
     return Config(std::move(rules));
 }
+} // namespace organizer
