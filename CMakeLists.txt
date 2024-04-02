@@ -24,4 +24,14 @@ add_subdirectory(src)
 
 target_link_libraries(organizer PRIVATE organizer_deps)
 
+if(DEFINED ENV{XDG_CONFIG_HOME})
+    set(CONFIG_HOME $ENV{XDG_CONFIG_HOME})
+elseif(DEFINED ENV{HOME})
+    set(CONFIG_HOME "$ENV{HOME}/.config")
+endif()
+
+install(
+  FILES ${CMAKE_CURRENT_SOURCE_DIR}/organizer.toml
+  DESTINATION ${CONFIG_HOME}
+  OPTIONAL)
 install(TARGETS organizer DESTINATION bin)
