@@ -8,17 +8,17 @@
 namespace organizer {
 /**
  * @class Manager
- * @brief Representation of a manager to watch paths for changes
+ * @brief Representation of an inotify manager to watch paths for changes
  *
  */
-class Manager {
+class InotifyManager {
   public:
     /**
      * @brief Watch a path for changes
      *
      * @param path
      */
-    void watch(std::string path);
+    void add_watcher(std::string path);
 
     /**
      * @brief Run the manager with a handler function
@@ -29,6 +29,6 @@ class Manager {
 
   private:
     Inotify notify;
-    std::vector<InotifyWatch> watches;
+    std::vector<InotifyWatch> _watches;
 };
 } // namespace organizer

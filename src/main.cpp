@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
 
     argparse::ArgumentParser cli("organizer", ORGANIZER_VERSION);
     cli.add_argument("-c", "--config")
-        .default_value(std::string("~/.config/organizer.toml"))
+        .default_value("~/.config/organizer.toml")
         .help("path of the config file")
         .nargs(1);
     cli.add_argument("-d", "--debug")
@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
     loguru::init(argc, argv);
 
     organizer::Config config;
-    organizer::Manager manager;
+    organizer::InotifyManager manager;
 
     {
         std::unique_ptr<organizer::ConfigParser> parser =
@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
     }
 
     for (auto &path : config.watch_paths()) {
-        manager.watch(path);
+        manager.add_watcher(path);
     }
 
     manager.run([&](auto file_name, auto file_path) {

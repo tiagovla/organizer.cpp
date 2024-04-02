@@ -9,13 +9,13 @@ static constexpr long PERMISSIONS = IN_MOVED_TO | IN_CLOSE_WRITE;
 
 namespace organizer {
 
-void Manager::watch(std::string path) {
-    watches.emplace_back(path, PERMISSIONS);
-    notify.add(watches.back());
+void InotifyManager::add_watcher(std::string path) {
+    _watches.emplace_back(path, PERMISSIONS);
+    notify.add(_watches.back());
     LOG_F(INFO, "Watching directory %s", path.c_str());
 }
 
-void Manager::run(
+void InotifyManager::run(
     std::function<void(std::string_view, std::string_view)> handler) {
     try {
         for (;;) {
